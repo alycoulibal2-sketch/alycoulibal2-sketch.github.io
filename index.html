@@ -1,0 +1,446 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aly Coulibaly — Games, tools & web builds</title>
+<meta name="description" content="I build games, desktop tools, 3D assets and web apps. Four shipped projects you can open right now." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  /* ── tokens ──────────────────────────────────────────────────────────── */
+  :root {
+    --ground:   #E9E7E2;
+    --surface:  #F3F2EE;
+    --sunken:   #DEDBD4;
+    --ink:      #17171B;
+    --muted:    #6B6960;
+    --hairline: #C8C4BA;
+    --accent:   #E8A317;
+    --accent-ink: #7A5200;
+    --grid:     rgba(23, 23, 27, 0.045);
+
+    --display: "IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --body:    "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+    --measure: 66ch;
+    --pad: clamp(1.15rem, 4vw, 2.75rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:   #131316;
+      --surface:  #1B1B20;
+      --sunken:   #101013;
+      --ink:      #E8E7E3;
+      --muted:    #8E8C84;
+      --hairline: #33333A;
+      --accent:   #F0B429;
+      --accent-ink: #F0B429;
+      --grid:     rgba(232, 231, 227, 0.05);
+    }
+  }
+  /* viewer toggle must win over the media query, in both directions */
+  :root[data-theme="dark"] {
+    --ground: #131316; --surface: #1B1B20; --sunken: #101013;
+    --ink: #E8E7E3; --muted: #8E8C84; --hairline: #33333A;
+    --accent: #F0B429; --accent-ink: #F0B429; --grid: rgba(232,231,227,0.05);
+  }
+  :root[data-theme="light"] {
+    --ground: #E9E7E2; --surface: #F3F2EE; --sunken: #DEDBD4;
+    --ink: #17171B; --muted: #6B6960; --hairline: #C8C4BA;
+    --accent: #E8A317; --accent-ink: #7A5200; --grid: rgba(23,23,27,0.045);
+  }
+
+  /* ── ground ──────────────────────────────────────────────────────────── */
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--ground);
+    /* drafting grid: 8px minor, 64px major */
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 64px 64px, 64px 64px;
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    font-feature-settings: "kern" 1;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--pad); }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ── shared type ─────────────────────────────────────────────────────── */
+  .label {
+    font-family: var(--mono);
+    font-size: 0.688rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  h1, h2, h3 { font-family: var(--display); font-weight: 700; text-wrap: balance; margin: 0; }
+
+  /* ── masthead ────────────────────────────────────────────────────────── */
+  .mast {
+    border-bottom: 1px solid var(--hairline);
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+    padding-bottom: clamp(2rem, 5vw, 3.25rem);
+  }
+  .mast-top {
+    display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem;
+    align-items: baseline; justify-content: space-between;
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .mast h1 {
+    font-size: clamp(2.4rem, 7.5vw, 4.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.1rem;
+  }
+  .mast h1 em {
+    font-style: normal;
+    /* the one place the accent runs as a solid mark — a drafting rule set
+       below the descenders, not a highlighter through them */
+    background: linear-gradient(var(--accent), var(--accent)) no-repeat left bottom / 100% 0.1em;
+    padding-bottom: 0.1em;
+  }
+  .lede {
+    font-size: clamp(1.02rem, 2.1vw, 1.2rem);
+    color: var(--muted);
+    max-width: var(--measure);
+    margin: 0;
+  }
+
+  /* proof strip — the live links, immediately */
+  .proof {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-top: clamp(1.6rem, 4vw, 2.25rem);
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 0.44rem 0.8rem;
+    border: 1px solid var(--hairline);
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .chip::before {
+    content: ""; width: 6px; height: 6px; background: var(--accent);
+    flex: none;
+  }
+  .chip:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  /* ── section frame ───────────────────────────────────────────────────── */
+  section { padding-block: clamp(2.75rem, 7vw, 4.75rem); }
+  .sec-head {
+    display: flex; align-items: baseline; gap: 1rem;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 0.7rem; margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+  }
+  .sec-head h2 { font-size: clamp(1.05rem, 2.4vw, 1.35rem); letter-spacing: 0.01em; }
+  .sec-head .count { margin-left: auto; }
+
+  /* ── datasheets ──────────────────────────────────────────────────────── */
+  .sheets { display: grid; gap: clamp(1rem, 2.5vw, 1.5rem); }
+  @media (min-width: 900px) { .sheets { grid-template-columns: 1fr 1fr; } }
+
+  .sheet {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    padding: clamp(1.15rem, 2.8vw, 1.75rem);
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  /* corner ticks — drafting registration marks */
+  .sheet::before, .sheet::after {
+    content: ""; position: absolute; width: 9px; height: 9px;
+    border-color: var(--accent); border-style: solid; opacity: .85;
+  }
+  .sheet::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .sheet::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  .sheet-head { display: flex; align-items: baseline; gap: 0.85rem; }
+  .sheet-head h3 { font-size: clamp(1.15rem, 2.6vw, 1.4rem); letter-spacing: -0.005em; }
+  .pn { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-left: auto; flex: none; }
+
+  .sheet p { margin: 0; color: var(--muted); font-size: 0.925rem; }
+
+  /* spec rows: real facts, tabular figures */
+  .specs { border-top: 1px solid var(--hairline); margin-top: auto; }
+  .spec {
+    display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.75rem;
+    padding: 0.42rem 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.8rem;
+  }
+  .spec dt {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); padding-top: 0.15em;
+  }
+  .spec dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+  .sheet-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .slink {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.04em;
+    text-decoration: none; color: var(--accent-ink);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1px;
+  }
+  .slink + .slink { margin-left: 0.65rem; }
+  .slink:hover { background: var(--accent); color: #17171B; }
+
+  /* ── services ────────────────────────────────────────────────────────── */
+  .svc { display: grid; gap: 0; border-top: 1px solid var(--hairline); }
+  .svc-row {
+    display: grid; gap: 0.4rem 1.5rem;
+    grid-template-columns: 1fr;
+    padding: clamp(1rem, 2.4vw, 1.4rem) 0;
+    border-bottom: 1px solid var(--hairline);
+    align-items: start;
+  }
+  @media (min-width: 720px) {
+    .svc-row { grid-template-columns: 1.1fr 2fr 8.5rem; align-items: baseline; }
+  }
+  .svc-row h3 { font-size: 1.05rem; }
+  .svc-row p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  .price {
+    font-family: var(--mono); font-size: 0.85rem; font-weight: 500;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  @media (min-width: 720px) { .price { text-align: right; } }
+  .price span { color: var(--muted); font-size: 0.7rem; display: block; }
+
+  /* ── contact ─────────────────────────────────────────────────────────── */
+  .contact {
+    background: var(--sunken);
+    border: 1px solid var(--hairline);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    display: grid; gap: 1.25rem;
+  }
+  @media (min-width: 780px) {
+    .contact { grid-template-columns: 1fr auto; align-items: center; gap: 2rem; }
+  }
+  .contact h2 { font-size: clamp(1.3rem, 3vw, 1.8rem); margin-bottom: 0.5rem; }
+  .contact p { margin: 0; color: var(--muted); max-width: 46ch; font-size: 0.95rem; }
+  .mailto {
+    display: inline-block;
+    font-family: var(--mono); font-size: 0.9rem; font-weight: 500;
+    text-decoration: none;
+    background: var(--accent); color: #17171B;
+    padding: 0.85rem 1.5rem;
+    border: 1px solid var(--accent);
+    white-space: nowrap;
+    transition: transform .15s ease;
+  }
+  .mailto:hover { transform: translateY(-2px); }
+
+  footer {
+    border-top: 1px solid var(--hairline);
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding-block: 1.75rem 3rem;
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between;
+  }
+
+  /* ── motion, quiet ───────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mast-top">
+      <span class="label">Aly Coulibaly — Dubai, UAE</span>
+      <span class="label">Available for commissions</span>
+    </div>
+    <h1>I build <em>games, tools</em><br />and web apps.</h1>
+    <p class="lede">
+      Not mockups — working software. A desktop animation suite, a voxel engine written
+      from scratch, a multiplayer shooter, an AI advisor with live billing. Every project
+      below is running right now and you can open it yourself.
+    </p>
+    <nav class="proof" aria-label="Live projects">
+      <a class="chip" href="https://alycoulibal2-sketch.github.io/Cadence-Animator/" target="_blank" rel="noopener">Cadence Animator</a>
+      <a class="chip" href="https://corvexsa.netlify.app" target="_blank" rel="noopener">Corvexsa</a>
+      <a class="chip" href="https://www.roblox.com/games/95653832966974/" target="_blank" rel="noopener">Defend or Die</a>
+      <a class="chip" href="https://github.com/alycoulibal2-sketch" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <section id="work">
+    <div class="sec-head">
+      <h2>Selected work</h2>
+      <span class="label count">04 shipped</span>
+    </div>
+
+    <div class="sheets">
+
+      <article class="sheet reveal">
+        <div class="sheet-head">
+          <h3>Cadence Animator</h3>
+          <span class="pn">CDN-01</span>
+        </div>
+        <p>
+          A standalone desktop animation suite for Roblox — 3D viewport, timeline, inverse
+          kinematics solver, and a node-based procedural VFX editor. Built as a full
+          replacement for the tool most Roblox animators use, and driveable by an AI agent
+          through a Model Context Protocol server.
+        </p>
+        <dl class="specs">
+          <div class="spec"><dt>Stack</dt><dd>Electron, Three.js, Node.js</dd></div>
+          <div class="spec"><dt>Systems</dt><dd>IK solver, keyframe engine, node graph, MCP server</dd></div>
+          <div class="spec"><dt>Ships as</dt><dd>Packaged Windows installer</dd></div>
+          <div class="spec"><dt>Status</dt><dd>Released, public site + docs</dd></div>
+        </dl>
+        <div class="sheet-links">
+          <a class="slink" href="https://alycoulibal2-sketch.github.io/Cadence-Animator/" target="_blank" rel="noopener">Website →</a>
+          <a class="slink" href="https://github.com/alycoulibal2-sketch/Cadence-Animator" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="sheet reveal">
+        <div class="sheet-head">
+          <h3>Corvexsa</h3>
+          <span class="pn">CVX-02</span>
+        </div>
+        <p>
+          An AI wealth advisor running live in production. Conversational analysis backed by
+          a large language model, hands-free voice chat, account authentication, subscription
+          billing, and a broker connection — deployed on serverless functions.
+        </p>
+        <dl class="specs">
+          <div class="spec"><dt>Stack</dt><dd>Netlify Functions, Firebase Auth, Claude API</dd></div>
+          <div class="spec"><dt>Systems</dt><dd>Streaming chat, TTS voice, Stripe billing</dd></div>
+          <div class="spec"><dt>Ships as</dt><dd>Live web app</dd></div>
+          <div class="spec"><dt>Status</dt><dd>Deployed, in active development</dd></div>
+        </dl>
+        <div class="sheet-links">
+          <a class="slink" href="https://corvexsa.netlify.app" target="_blank" rel="noopener">Open the app →</a>
+        </div>
+      </article>
+
+      <article class="sheet reveal">
+        <div class="sheet-head">
+          <h3>Defend or Die</h3>
+          <span class="pn">DOD-03</span>
+        </div>
+        <p>
+          A co-operative wave-defense shooter across two linked game servers. Four enemy
+          classes with hand-authored animation sets, an ability and party system, persistent
+          cross-server leaderboards, and a custom PBR-textured lobby built from scratch.
+        </p>
+        <dl class="specs">
+          <div class="spec"><dt>Stack</dt><dd>Luau, Roblox engine, Blender</dd></div>
+          <div class="spec"><dt>Systems</dt><dd>Netcode, party matchmaking, persistence, mobile UI</dd></div>
+          <div class="spec"><dt>Art</dt><dd>Custom rigs, animation sets, procedural PBR materials</dd></div>
+          <div class="spec"><dt>Status</dt><dd>Published and playable</dd></div>
+        </dl>
+        <div class="sheet-links">
+          <a class="slink" href="https://www.roblox.com/games/95653832966974/" target="_blank" rel="noopener">Play it →</a>
+        </div>
+      </article>
+
+      <article class="sheet reveal">
+        <div class="sheet-head">
+          <h3>Voxel Engine</h3>
+          <span class="pn">VOX-04</span>
+        </div>
+        <p>
+          A Minecraft-style sandbox written from nothing in raw WebGL2 — no game engine,
+          no framework. Chunked terrain generation and meshing, creative and survival modes,
+          and world persistence, all running in a browser tab.
+        </p>
+        <dl class="specs">
+          <div class="spec"><dt>Stack</dt><dd>WebGL2, JavaScript — no engine</dd></div>
+          <div class="spec"><dt>Systems</dt><dd>Chunk meshing, terrain gen, save/load</dd></div>
+          <div class="spec"><dt>Ships as</dt><dd>Browser game</dd></div>
+          <div class="spec"><dt>Status</dt><dd>Playable, source public</dd></div>
+        </dl>
+        <div class="sheet-links">
+          <a class="slink" href="https://github.com/alycoulibal2-sketch/Minecraft-Crazygames" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="sec-head">
+      <h2>What I can build for you</h2>
+      <span class="label count">Fixed quotes</span>
+    </div>
+
+    <div class="svc">
+      <div class="svc-row">
+        <h3>Websites</h3>
+        <p>Landing pages and small business sites. Fast, responsive, works on every phone. Hosting set up and handed over.</p>
+        <div class="price">from 1,500 AED<span>3–7 days</span></div>
+      </div>
+      <div class="svc-row">
+        <h3>3D models &amp; textures</h3>
+        <p>Game-ready assets in Blender — modelled, UV-unwrapped, PBR textured, exported for your engine.</p>
+        <div class="price">from 300 AED<span>per asset</span></div>
+      </div>
+      <div class="svc-row">
+        <h3>Game development</h3>
+        <p>Roblox systems and full builds: gameplay scripting, UI, animation, monetisation, multiplayer.</p>
+        <div class="price">from 500 AED<span>per system</span></div>
+      </div>
+      <div class="svc-row">
+        <h3>Motion &amp; video</h3>
+        <p>Animated trailers, explainers and promo clips, rendered from code so revisions are cheap.</p>
+        <div class="price">from 400 AED<span>per video</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact">
+      <div>
+        <h2>Tell me what you need building.</h2>
+        <p>
+          Send a short description of the project. You get a fixed price and a delivery date
+          back — no hourly billing, no surprises. Small jobs often turn around same week.
+        </p>
+      </div>
+      <a class="mailto" href="mailto:alyc70755@gmail.com?subject=Project%20enquiry">alyc70755@gmail.com</a>
+    </div>
+
+    <footer>
+      <span class="label">Aly Coulibaly · Dubai, UAE</span>
+      <span class="label">Available for commissions</span>
+    </footer>
+  </section>
+
+</div>
+
+<script>
+  // quiet scroll reveal; skipped entirely when the viewer prefers less motion
+  if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }
+    }, { rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".reveal").forEach((el, i) => {
+      el.style.transitionDelay = (i % 2) * 60 + "ms";
+      io.observe(el);
+    });
+  } else {
+    document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in"));
+  }
+</script>
