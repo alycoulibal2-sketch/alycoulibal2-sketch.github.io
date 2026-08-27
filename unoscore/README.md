@@ -1,4 +1,4 @@
-# Feuille de score UNO
+# UnoScore
 
 **On note les points. On ne joue pas.** Pas de cartes à l'écran, pas de partie simulée :
 c'est le carnet où l'on inscrit les scores d'une vraie partie de UNO, autour d'une vraie table.
@@ -10,7 +10,9 @@ aucun build, aucun serveur, aucun compte.
 
 ## L'installer sur l'iPhone (30 secondes)
 
-En ligne ici : **https://alycoulibal2-sketch.github.io/uno/**
+En ligne ici : **https://alycoulibal2-sketch.github.io/unoscore/**
+
+L'ancienne adresse `/uno/` redirige ici, elle ne casse pas.
 
 1. **Le lien** — ouvrir cette adresse dans Safari. C'est tout.
 2. **Sur l'écran d'accueil** — bouton *Partager* → *Sur l'écran d'accueil*. L'appli s'ouvre
