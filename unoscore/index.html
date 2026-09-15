@@ -13,6 +13,8 @@
 <meta name="description" content="UnoScore : la feuille de score UNO. On note les points d'une vraie partie, on ne joue pas. Saisie au pouce sur iPhone.">
 <!-- APP:BEGIN -->
 <title>UnoScore</title>
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,100..125,400..900;1,100..125,400..900&family=Manrope:wght@400..800&display=swap" media="print" onload="this.media='all'">
@@ -1153,31 +1155,6 @@ function confetti(){
   })(t0);
 }
 
-/* ===================== icone maison ===================== */
-function homeIcon(){
-  try{
-    var s=180,cv=document.createElement('canvas'); cv.width=s; cv.height=s;
-    var x=cv.getContext('2d');
-    x.fillStyle='#0E0C14'; x.fillRect(0,0,s,s);
-    var g=x.createRadialGradient(s*.5,s*.1,10,s*.5,s*.5,s*.8);
-    g.addColorStop(0,'rgba(255,197,61,.20)'); g.addColorStop(1,'rgba(255,197,61,0)');
-    x.fillStyle=g; x.fillRect(0,0,s,s);
-    x.save(); x.translate(s/2,s/2); x.rotate(-5*Math.PI/180);
-    x.fillStyle='#F03A4E'; x.beginPath();
-    if(x.ellipse) x.ellipse(0,0,66,40,0,0,Math.PI*2); else x.arc(0,0,52,0,Math.PI*2);
-    x.fill();
-    x.fillStyle='#FFC53D'; x.textAlign='center'; x.textBaseline='middle';
-    x.font='italic 900 46px Archivo, Helvetica, Arial, sans-serif';
-    x.fillText('UNO',0,3); x.restore();
-    var link=document.querySelector('link[rel="apple-touch-icon"]');
-    if(!link){link=document.createElement('link');link.rel='apple-touch-icon';document.head.appendChild(link);}
-    link.href=cv.toDataURL('image/png');
-    var fav=document.querySelector('link[rel="icon"]');
-    if(!fav){fav=document.createElement('link');fav.rel='icon';document.head.appendChild(fav);}
-    fav.href=link.href;
-  }catch(e){}
-}
-
 /* ===================== demarrage ===================== */
 load(); render();
 el('roundBtn').addEventListener('click',function(){openRoundSheet(null);});
@@ -1185,7 +1162,6 @@ el('histBtn').addEventListener('click',openHistory);
 el('setBtn').addEventListener('click',openSettings);
 el('undoBtn').addEventListener('click',undo);
 window.addEventListener('resize',function(){});
-if(document.fonts&&document.fonts.ready) document.fonts.ready.then(homeIcon); else setTimeout(homeIcon,600);
 })();
 </script>
 <!-- APP:END -->

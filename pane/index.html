@@ -12,6 +12,8 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="description" content="Pane : un mini-navigateur qui s'ouvre dans Safari, sans rien installer. Onglets, favoris, historique ; les sites qui l'autorisent s'affichent dans la page, les autres s'ouvrent d'un geste dans Safari.">
 <title>Pane</title>
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;600&display=swap" media="print" onload="this.media='all'">
@@ -957,36 +959,10 @@ document.addEventListener('keydown',function(e){
   if(k===']'){ e.preventDefault(); var t3=activeTab(); if(t3) stepHistory(t3.id,1); return; }
 });
 
-/* icone d'ecran d'accueil */
-function homeIcon(){
-  try{
-    var s=180,cv=document.createElement('canvas'); cv.width=s; cv.height=s;
-    var x=cv.getContext('2d');
-    var g=x.createLinearGradient(0,0,s,s);
-    g.addColorStop(0,'#0F1115'); g.addColorStop(1,'#141821');
-    x.fillStyle=g; x.fillRect(0,0,s,s);
-    var g2=x.createLinearGradient(s*.15,s*.1,s*.85,s*.9);
-    g2.addColorStop(0,'#4C8DFF'); g2.addColorStop(1,'#7db0ff');
-    x.strokeStyle=g2; x.lineWidth=10; x.lineCap='round';
-    x.beginPath(); x.arc(s/2,s/2,55,0,Math.PI*2); x.stroke();
-    x.beginPath(); x.moveTo(s*.16,s/2); x.lineTo(s*.84,s/2); x.stroke();
-    x.beginPath(); x.moveTo(s/2,s*.14);
-    x.bezierCurveTo(s*.72,s*.34,s*.72,s*.66,s/2,s*.86);
-    x.stroke();
-    var link=document.querySelector('link[rel="apple-touch-icon"]');
-    if(!link){link=document.createElement('link');link.rel='apple-touch-icon';document.head.appendChild(link);}
-    link.href=cv.toDataURL('image/png');
-    var fav=document.querySelector('link[rel="icon"]');
-    if(!fav){fav=document.createElement('link');fav.rel='icon';document.head.appendChild(fav);}
-    fav.href=link.href;
-  }catch(e){}
-}
-
 /* ===================== demarrage ===================== */
 load();
 renderHome();
 paintChrome();
-if(document.fonts&&document.fonts.ready) document.fonts.ready.then(homeIcon); else setTimeout(homeIcon,600);
 })();
 </script>
 </body>
