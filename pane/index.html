@@ -492,7 +492,10 @@ function ensureFrame(tab){
   wrap.appendChild(iframe);
   el('frames').appendChild(wrap);
   fs.wrap=wrap; fs.iframe=iframe;
-  iframe.addEventListener('load',function(){ onFrameLoad(tab.id); });
+  iframe.addEventListener('load',function(){
+    clearTimeout(fs.settleTimer);
+    fs.settleTimer=setTimeout(function(){ onFrameLoad(tab.id); },150);
+  });
   return fs;
 }
 function showTabFrame(id){
@@ -520,6 +523,7 @@ function startProgress(){
 }
 function armTimeout(tabId,fs){
   clearTimeout(fs.loadTimer);
+  clearTimeout(fs.settleTimer);
   fs.loadTimer=setTimeout(function(){ finishNav(tabId,false); },6500);
 }
 function finishNav(tabId, ok){
