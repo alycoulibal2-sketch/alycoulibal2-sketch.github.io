@@ -262,6 +262,15 @@ svg{display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:
 .blocked .openbtn svg{width:17px;height:17px;stroke-width:2.3}
 .blocked .why{margin-top:2px;font-size:11.5px;color:var(--ink-3)}
 
+.escape{position:absolute;right:14px;bottom:14px;z-index:10;display:flex;align-items:center;gap:7px;
+  height:38px;padding:0 15px 0 12px;border-radius:19px;background:rgba(23,27,36,.86);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--line-2);
+  color:var(--ink);font-size:12.5px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.35);
+  transition:opacity .15s,transform .15s}
+.escape svg{width:14px;height:14px;stroke-width:2.3;color:var(--ink-2)}
+.escape.hide{opacity:0;pointer-events:none;transform:translateY(6px)}
+.escape:active{transform:scale(.95)}
+
 /* ===== toast ===== */
 #toast{position:fixed;left:50%;bottom:calc(var(--safe-b) + 78px);z-index:90;transform:translate(-50%,12px);
   opacity:0;transition:opacity .2s,transform .2s;background:var(--chrome-2);border:1px solid var(--line-2);
@@ -305,7 +314,7 @@ svg{display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:
       </button>
       <div class="sec-label"><span>Favoris</span><button id="editTiles">Modifier</button></div>
       <div class="tiles" id="tiles"></div>
-      <div class="note" id="homeNote"><b>À savoir —</b> Pane affiche les sites qui l'autorisent directement dans la page. Les autres (Google, YouTube, Instagram…) s'ouvrent d'un geste dans Safari : c'est une règle de sécurité du web, pas une limite de Pane. Une page reste blanche ou semble figée ? Menu <b>•••</b> → <b>Ouvrir dans Safari</b>, toujours disponible.</div>
+      <div class="note" id="homeNote"><b>À savoir —</b> Pane affiche les sites qui l'autorisent directement dans la page. Les autres (Google, YouTube, Instagram…) restent blancs, ou s'ouvrent d'un geste dans Safari : c'est une règle de sécurité du web, pas une limite de Pane — et certains sites la font respecter d'une façon qui empêche même de savoir qu'elle s'applique. Une page reste vide ? Le bouton <b>Safari</b> en bas à droite de la page l'ouvre directement, à tout moment.</div>
     </div>
     <div class="blocked hide" id="blocked">
       <div class="bic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 16.5h.01"/><path d="M10.3 3.9 1.8 18.5a1.8 1.8 0 0 0 1.55 2.7h17.3a1.8 1.8 0 0 0 1.55-2.7L13.7 3.9a1.8 1.8 0 0 0-3.4 0Z"/></svg></div>
@@ -315,6 +324,9 @@ svg{display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:
       <p class="why">Ça protège les connexions et les mots de passe.</p>
     </div>
     <div id="frames"></div>
+    <button class="escape hide" id="escapeHatch" aria-label="Ouvrir cette page dans Safari">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>Safari
+    </button>
   </div>
 
   <div class="toolbar">
@@ -587,13 +599,14 @@ function isFavorited(url){
 }
 function paintChrome(){
   var t=activeTab();
-  if(!t.url){ showHome(true); paintTabCount(); paintNavButtons(t); return; }
+  if(!t.url){ showHome(true); el('escapeHatch').classList.add('hide'); paintTabCount(); paintNavButtons(t); return; }
   showHome(false);
   el('reloadBtn').style.visibility='visible';
   el('addrText').className='txt';
   el('addrText').innerHTML='<span class="host">'+esc(t.host)+'</span><span class="path">'+esc(pathOf(t.url))+'</span>';
   el('lockIcon').classList.toggle('secure',isSecure(t.url));
   el('blocked').classList.toggle('hide',!t.blocked);
+  el('escapeHatch').classList.toggle('hide',t.blocked);
   if(t.blocked){ el('blockedHost').textContent=t.host; showTabFrame(null); }
   paintNavButtons(t);
   paintTabCount();
@@ -886,6 +899,7 @@ el('tabsBtn').addEventListener('click',openTabsGrid);
 el('tabsDone').addEventListener('click',closeTabsGrid);
 el('newTabBtn').addEventListener('click',function(){ newTab(true); paintChrome(); closeTabsGrid(); });
 el('blockedOpen').addEventListener('click',function(){ var t=activeTab(); if(t.url) window.open(t.url,'_blank','noopener'); });
+el('escapeHatch').addEventListener('click',function(){ var t=activeTab(); if(t.url) window.open(t.url,'_blank','noopener'); });
 
 el('tiles').addEventListener('keydown',function(e){
   if(e.key!=='Enter'&&e.key!==' ') return;
