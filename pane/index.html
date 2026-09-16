@@ -434,6 +434,36 @@ function toUrl(q){
   return SEARCH+encodeURIComponent(q);
 }
 function hostOf(u){ try{return new URL(u).hostname.replace(/^www\./,'');}catch(e){return u;} }
+// YouTube bloque le cadrage de son site (recherche, accueil, chaines) comme n'importe
+// quel autre : aucune ruse cote client n'y change rien, c'est une politique du serveur.
+// Mais une video precise a, elle, une forme d'integration officiellement autorisee
+// (/embed/ID) : c'est exactement ce qui fait marcher toute video YouTube integree sur
+// le web depuis toujours. On detecte un lien video ordinaire et on bascule dessus.
+function rewriteEmbeddable(url){
+  try{
+    var u=new URL(url), host=u.hostname.replace(/^www\.|^m\./,'');
+    if(host==='youtube.com'){
+      if(u.pathname==='/watch'){
+        var id=u.searchParams.get('v'); if(!id) return url;
+        var q=[]; var list=u.searchParams.get('list'); if(list) q.push('list='+encodeURIComponent(list));
+        var t=u.searchParams.get('t')||u.searchParams.get('start');
+        if(t) q.push('start='+encodeURIComponent(String(t).replace(/s$/,'')));
+        return 'https://www.youtube.com/embed/'+encodeURIComponent(id)+(q.length?'?'+q.join('&'):'');
+      }
+      if(u.pathname==='/playlist'){
+        var pl=u.searchParams.get('list'); if(!pl) return url;
+        return 'https://www.youtube.com/embed/videoseries?list='+encodeURIComponent(pl);
+      }
+    }
+    if(host==='youtu.be'){
+      var vid=u.pathname.slice(1).split('/')[0]; if(!vid) return url;
+      var q2=[]; var t2=u.searchParams.get('t');
+      if(t2) q2.push('start='+encodeURIComponent(String(t2).replace(/s$/,'')));
+      return 'https://www.youtube.com/embed/'+encodeURIComponent(vid)+(q2.length?'?'+q2.join('&'):'');
+    }
+  }catch(e){}
+  return url;
+}
 function pathOf(u){ try{var x=new URL(u);return (x.pathname==='/'?'':x.pathname)+x.search;}catch(e){return '';} }
 function isSecure(u){ try{return new URL(u).protocol==='https:';}catch(e){return false;} }
 function faviconMark(host){return initial(host);}
@@ -552,6 +582,7 @@ function go(tabId, rawInput, opts){
   var t=tabById(tabId); if(!t) return;
   var url=opts.direct?rawInput:toUrl(rawInput);
   if(!url) return;
+  url=rewriteEmbeddable(url);
   var fs=frameState(tabId);
   if(!opts.silent){
     fs.entries=fs.entries.slice(0,fs.idx+1);
